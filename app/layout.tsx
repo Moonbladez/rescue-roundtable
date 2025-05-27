@@ -1,9 +1,8 @@
+import { CustomAppShell } from '@/components/layout/appshell';
 import { MantineServerProvider } from '@/components/provider';
+import '@mantine/core/styles.css';
 import { Geist } from 'next/font/google';
 import { ReactNode } from 'react';
-
-import { CustomAppShell } from '@/components/layout/appshell';
-import '@mantine/core/styles.css';
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
