@@ -1,6 +1,16 @@
 import { signInAction } from '@/app/actions';
 import { FormMessage, Message } from '@/components/form-message';
-import { Button, PasswordInput, Text, TextInput, Title } from '@mantine/core';
+import {
+  Anchor,
+  Box,
+  Button,
+  Center,
+  Flex,
+  PasswordInput,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
 import Link from 'next/link';
 
 export default async function Login(
@@ -8,31 +18,45 @@ export default async function Login(
 ) {
   const searchParams = await props.searchParams;
   return (
-    <form>
-      <Title order={1}>Sign in</Title>
-      <Text>
-        Don't have an account? <Link href="/sign-up">Sign up</Link>
-      </Text>
-      <div>
-        <TextInput
-          label="Email"
-          placeholder="you@example.com"
-          required
-          withAsterisk
-        />
-        <PasswordInput
-          label="Password"
-          placeholder="Your password"
-          required
-          withAsterisk
-        />
-        <div>
-          <Link href="/forgot-password">Forgot Password?</Link>
-        </div>
+    <Center>
+      <form>
+        <Title order={1}>Sign in</Title>
+        <Text>
+          Don't have an account?{' '}
+          <Anchor component={Link} href="/sign-up">
+            Sign up
+          </Anchor>
+        </Text>
+        <Flex direction="column" gap="md" mt="md">
+          <TextInput
+            label="Email"
+            placeholder="you@example.com"
+            required
+            withAsterisk
+            name="email"
+            type="email"
+            autoComplete="email"
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="Your password"
+            required
+            withAsterisk
+            name="password"
+            autoComplete="current-password"
+          />
+          <Box>
+            <Anchor component={Link} href="/forgot-password" size="sm">
+              Forgot Password?
+            </Anchor>
+          </Box>
 
-        <Button formAction={signInAction}>Sign in</Button>
-        <FormMessage message={searchParams} />
-      </div>
-    </form>
+          <Button formAction={signInAction} type="submit">
+            Sign in
+          </Button>
+          <FormMessage message={searchParams} />
+        </Flex>
+      </form>
+    </Center>
   );
 }

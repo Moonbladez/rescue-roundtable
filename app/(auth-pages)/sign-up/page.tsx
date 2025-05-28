@@ -1,6 +1,15 @@
 import { signUpAction } from '@/app/actions';
 import { FormMessage, Message } from '@/components/form-message';
-import { Button, PasswordInput, TextInput, Title } from '@mantine/core';
+import {
+  Anchor,
+  Button,
+  Center,
+  Flex,
+  PasswordInput,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
 import Link from 'next/link';
 
 export default async function Signup(
@@ -18,23 +27,41 @@ export default async function Signup(
   }
 
   return (
-    <form>
-      <Title order={1}>Sign up</Title>
-      <p>
-        Already have an account? <Link href="/sign-in">Sign in</Link>
-      </p>
-      <div>
-        <TextInput label="Email" placeholder="you@example.com" required />
-        <PasswordInput
-          label="Password"
-          type="password"
-          placeholder="Your password"
-          minLength={8}
-          required
-        />
-        <Button formAction={signUpAction}>Sign up</Button>
-        <FormMessage message={searchParams} />
-      </div>
-    </form>
+    <Center>
+      <form>
+        <Title order={1}>Sign up</Title>
+        <Text>
+          Already have an account?{' '}
+          <Anchor component={Link} href="/sign-in">
+            Sign in
+          </Anchor>
+        </Text>
+        <Flex direction="column" gap="md" mt="md">
+          <TextInput
+            label="Email"
+            placeholder="you@example.com"
+            required
+            name="email"
+            type="email"
+            autoComplete="email"
+            withAsterisk
+          />
+          <PasswordInput
+            label="Password"
+            type="password"
+            placeholder="Your password"
+            minLength={8}
+            required
+            name="password"
+            withAsterisk
+            autoComplete="new-password"
+          />
+          <Button formAction={signUpAction} type="submit">
+            Sign up
+          </Button>
+          <FormMessage message={searchParams} />
+        </Flex>
+      </form>
+    </Center>
   );
 }

@@ -9,22 +9,32 @@ export default async function Home() {
     .from('categories')
     .select(`*, forums(*)`);
 
-  console.log('Categories:', categories);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <Flex direction="column" gap="lg">
       <div>navbar and notifications</div>
       <Breadcrumb items={[{ title: 'Home', href: '/' }]} />
-      <Text component="span" c="dimmed" size="xs">
-        It is currently{' '}
-        {new Date().toLocaleString(undefined, {
-          year: 'numeric',
-          month: 'long',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-        })}
-      </Text>
+      <Flex justify="space-between" align="center">
+        <Text component="span" c="dimmed" size="xs">
+          It is currently{' '}
+          {new Date().toLocaleString(undefined, {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </Text>
+        {user && (
+          <Text component="span" c="dimmed" size="xs">
+            Logged in as <strong>{user.email}</strong>
+          </Text>
+        )}
+      </Flex>
+
       <Flex direction="column" gap="md">
         <ForumTable categories={categories ?? []} />
       </Flex>

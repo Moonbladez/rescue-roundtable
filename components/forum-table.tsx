@@ -10,7 +10,6 @@ interface Forum {
   description?: string | null;
   topics: number;
   posts: number;
-  lastPost: string;
 }
 
 interface Category {
@@ -29,7 +28,7 @@ export const ForumTable = ({ categories }: { categories: Category[] }) => {
               <Flex direction="column" gap={2}>
                 <Anchor
                   component={NextLink}
-                  href={`/forum/${forum.slug}`}
+                  href={`/categories/${category.id}/forums/${forum.id}`}
                   underline="hover"
                   fw="bold"
                   size="sm"
@@ -43,9 +42,9 @@ export const ForumTable = ({ categories }: { categories: Category[] }) => {
                 )}
               </Flex>
             </Table.Td>
-            <Table.Td>{forum.topics}</Table.Td>
-            <Table.Td>{forum.posts}</Table.Td>
-            <Table.Td>{forum.lastPost}</Table.Td>
+            <Table.Td>topics t</Table.Td>
+            <Table.Td>posts total</Table.Td>
+            <Table.Td>last post</Table.Td>
           </Table.Tr>
         ));
 
@@ -60,7 +59,6 @@ export const ForumTable = ({ categories }: { categories: Category[] }) => {
           >
             <Table.Thead>
               <Table.Tr>
-                {/* now shows the real category name */}
                 <Table.Th>{category.name}</Table.Th>
                 <Table.Th>Topics</Table.Th>
                 <Table.Th>Posts</Table.Th>

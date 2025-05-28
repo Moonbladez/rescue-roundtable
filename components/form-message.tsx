@@ -1,14 +1,16 @@
+import { Text } from '@mantine/core';
+
 export type Message =
   | { success: string }
   | { error: string }
   | { message: string };
 
-export function FormMessage({ message }: { message: Message }) {
+export function FormMessage({ message }: Readonly<{ message: Message }>) {
   return (
     <div>
-      {'success' in message && <div>{message.success}</div>}
-      {'error' in message && <div>{message.error}</div>}
-      {'message' in message && <div>{message.message}</div>}
+      {'success' in message && <Text c="green">{message.success}</Text>}
+      {'error' in message && <Text c="red">{message.error}</Text>}
+      {'message' in message && <Text c="dimmed">{message.message}</Text>}
     </div>
   );
 }
