@@ -1,24 +1,17 @@
 'use client';
 
+import { Tables } from '@/database.types';
 import { Anchor, Flex, Table, Text } from '@mantine/core';
 import NextLink from 'next/link';
 
-interface Forum {
-  id: string;
-  slug: string;
-  name: string;
-  description?: string | null;
-  topics: number;
-  posts: number;
-}
+export type CategoryWithForums = Tables<'categories'> & {
+  forums: Tables<'forums'>[];
+};
 
-interface Category {
-  id: string;
-  name: string;
-  forums: Forum[];
+interface ForumTableProps {
+  categories: CategoryWithForums[];
 }
-
-export const ForumTable = ({ categories }: { categories: Category[] }) => {
+export const ForumTable = ({ categories }: ForumTableProps) => {
   return (
     <>
       {categories.map((category) => {
