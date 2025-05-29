@@ -37,7 +37,7 @@ export type Database = {
           description: string | null
           id: string
           name: string
-          slug: string
+          sort_order: number
         }
         Insert: {
           category_id: string
@@ -45,7 +45,7 @@ export type Database = {
           description?: string | null
           id?: string
           name: string
-          slug: string
+          sort_order?: number
         }
         Update: {
           category_id?: string
@@ -53,7 +53,7 @@ export type Database = {
           description?: string | null
           id?: string
           name?: string
-          slug?: string
+          sort_order?: number
         }
         Relationships: [
           {
@@ -71,21 +71,21 @@ export type Database = {
           created_at: string
           id: string
           topic_id: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           content: string
           created_at?: string
           id?: string
           topic_id: string
-          user_id?: string | null
+          user_id?: string
         }
         Update: {
           content?: string
           created_at?: string
           id?: string
           topic_id?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -93,6 +93,13 @@ export type Database = {
             columns: ["topic_id"]
             isOneToOne: false
             referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -146,6 +153,13 @@ export type Database = {
             columns: ["forum_id"]
             isOneToOne: false
             referencedRelation: "forums"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "topics_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]

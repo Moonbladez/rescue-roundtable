@@ -2,18 +2,24 @@
 
 import { Tables } from '@/database.types';
 import { createClient } from '@/utils/supabase/client';
-import { Alert, Anchor, Table } from '@mantine/core';
+import { Alert, Anchor, Table, Text } from '@mantine/core';
 import { LockKeyholeIcon, PinIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+interface TopicsWithPostsAndProfiles extends Tables<'topics'> {
+  posts: Tables<'posts'>[];
+  profiles: Tables<'profiles'>;
+}
+
 export const TopicTable = () => {
   const supabase = createClient();
-  const [topics, setTopics] = useState<Tables<'topics'>[]>([]);
+  const [topics, setTopics] = useState<TopicsWithPostsAndProfiles[]>([]);
   const [error, setError] = useState<any>(null);
-  const params = useParams<{ forumId: string }>();
+  const params = useParams<{ forumId: string; categoryId: string }>();
   const forumId = params.forumId;
+  const categoryId = params.categoryId;
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -22,6 +28,7 @@ export const TopicTable = () => {
         .select(
           `
           *,
+          posts(*),
           profiles (*)
           `
         )
@@ -44,38 +51,42 @@ export const TopicTable = () => {
     return <Alert color="red">Error loading topics</Alert>;
   }
 
-  console.log('Fetched topics:', topics);
-
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Replies</th>
-          <th>Last Post</th>
-        </tr>
-      </thead>
-      <tbody>
+    <Table withRowBorders={true}>
+      <Table.Thead>
+        <Table.Tr>
+          <Table.Th>Title</Table.Th>
+          <Table.Th>Author</Table.Th>
+          <Table.Th>Replies</Table.Th>
+          <Table.Th>Last Post</Table.Th>
+        </Table.Tr>
+      </Table.Thead>
+      <Table.Tbody>
         {topics.map((topic) => (
-          <tr key={topic.id}>
-            <td>
+          <Table.Tr key={topic.id}>
+            <Table.Td>
               {topic.is_sticky && <PinIcon color="gold" />}
               {topic.is_locked && <LockKeyholeIcon color="red" />}
               <Anchor
-                href={`/topics/${topic.id}`}
+                href={`/categories/${categoryId}/forums/${forumId}/topics/${topic.id}`}
                 component={Link}
                 underline="never"
               >
                 {topic.title}
               </Anchor>
-            </td>
-            <td>{topic.profiles.email}</td>
-            <td>Replies total</td>
-            <td>Latest Reply</td>
-          </tr>
+            </Table.Td>
+            <Table.Td>{topic.profiles.email}</Table.Td>
+            <Table.Td>{topic.posts.length - 1}</Table.Td>
+            <Table.Td>
+              {topic.posts[1]?.created_at ?? (
+                <Text c="dimmed" size="sm">
+                  No replies yet
+                </Text>
+              )}
+            </Table.Td>
+          </Table.Tr>
         ))}
-      </tbody>
+      </Table.Tbody>
     </Table>
   );
 };
