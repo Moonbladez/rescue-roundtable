@@ -1,5 +1,7 @@
+import { TopicTable } from '@/components/topic-table';
 import { createClient } from '@/utils/supabase/server';
-import { Anchor, Flex, Stack, Text, Title } from '@mantine/core';
+import { Alert, Button, Flex, Stack, Text, Title } from '@mantine/core';
+import { Plus } from 'lucide-react';
 
 export default async function ForumPage({
   params,
@@ -7,20 +9,25 @@ export default async function ForumPage({
   params: Promise<{ categoryId: string; forumId: string }>;
 }>) {
   const supabase = await createClient();
-  const { forumId, categoryId } = await params;
+  const { forumId } = await params;
 
-  const { data: forums } = await supabase
+  const { data: forums, error } = await supabase
     .from('forums')
-    .select(`*, topics(*)`)
-    .order('created_at', { ascending: false })
-    .eq('id', forumId);
+    .select(`name, description, id`)
+    .eq('id', forumId)
+    .order('created_at', { ascending: true });
 
-  if (!forums || forums.length === 0) {
+  if (error) {
+    console.error('Error fetching forum:', error);
     return (
       <Flex direction="column" gap="lg">
-        <Text>Forum not found</Text>
+        <Text>Failed to load forum</Text>
       </Flex>
     );
+  }
+
+  if (!forums || forums.length === 0) {
+    return <Alert color="red">Forum not found</Alert>;
   }
 
   return (
@@ -33,17 +40,19 @@ export default async function ForumPage({
           </Text>
         )}
       </Stack>
+      {/* /// TODO: only if logged in */}
+      <Flex>
+        <Button
+          color="gray"
+          leftSection={<Plus size={14} />}
+          size="xs"
+          variant="outline"
+        >
+          New Post
+        </Button>
+      </Flex>
 
-      <Stack>
-        {forums[0].topics.map((topic) => (
-          <Anchor
-            key={topic.id}
-            href={`/categories/${categoryId}/forums/${forumId}/topics/${topic.id}`}
-          >
-            {topic.title}
-          </Anchor>
-        ))}
-      </Stack>
+      <TopicTable />
     </Flex>
   );
 }

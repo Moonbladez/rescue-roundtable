@@ -1,17 +1,40 @@
 import { ForumTable } from '@/components/forum-table';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { createClient } from '@/utils/supabase/server';
-import { Flex, Text } from '@mantine/core';
+import { Alert, Flex, Text } from '@mantine/core';
+import { TriangleAlertIcon } from 'lucide-react';
 
 export default async function Home() {
   const supabase = await createClient();
-  const { data: categories } = await supabase
+  const { data: categories, error } = await supabase
     .from('categories')
-    .select(`*, forums(*)`);
+    .select(
+      `
+      *,
+      forums(*)
+    `
+    )
+    .order('sort_order', {
+      referencedTable: 'forums',
+      ascending: true,
+    });
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (error) {
+    console.error('Error fetching categories:', error);
+    return (
+      <Alert
+        title="Error fetching categories"
+        color="red"
+        icon={<TriangleAlertIcon size={30} />}
+      >
+        {error.message || 'An error occurred while fetching categories.'}
+      </Alert>
+    );
+  }
 
   return (
     <Flex direction="column" gap="lg">
@@ -35,9 +58,7 @@ export default async function Home() {
         )}
       </Flex>
 
-      <Flex direction="column" gap="md">
-        <ForumTable categories={categories ?? []} />
-      </Flex>
+      <ForumTable categories={categories ?? []} />
     </Flex>
   );
 }
