@@ -2,6 +2,7 @@ import { ForumTable } from '@/components/forum-table';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { createClient } from '@/utils/supabase/server';
 import { Alert, Flex, Text } from '@mantine/core';
+import dayjs from 'dayjs';
 import { TriangleAlertIcon } from 'lucide-react';
 
 export default async function Home() {
@@ -42,18 +43,18 @@ export default async function Home() {
       <Breadcrumb items={[{ title: 'Home', href: '/' }]} />
       <Flex justify="space-between" align="center">
         <Text component="span" c="dimmed" size="xs">
-          It is currently{' '}
-          {new Date().toLocaleString(undefined, {
-            year: 'numeric',
-            month: 'long',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
+          It is currently {dayjs().format('MMMM D, YYYY HH:mm a')}
         </Text>
-        {user && (
+        {user ? (
           <Text component="span" c="dimmed" size="xs">
-            Logged in as <strong>{user.email}</strong>
+            Logged in as:
+            <Text span fw="bold" ml={2}>
+              {user.email}
+            </Text>
+          </Text>
+        ) : (
+          <Text component="span" c="dimmed" size="xs">
+            You are not logged in
           </Text>
         )}
       </Flex>

@@ -1,6 +1,6 @@
 'use client';
 
-import { createTheme, MantineProvider } from '@mantine/core';
+import { ColorSchemeScript, createTheme, MantineProvider } from '@mantine/core';
 import { ThemeProvider } from 'next-themes';
 import { ReactNode } from 'react';
 
@@ -17,6 +17,10 @@ export function MantineServerProvider({
 }: Readonly<MantineServerProviderProps>) {
   return (
     <ThemeProvider enableSystem={true}>
+      <ColorSchemeScript
+        nonce="8IBTHwOdqNKAWeKl7plt8g=="
+        defaultColorScheme="auto"
+      />
       <MantineProvider
         withGlobalClasses
         defaultColorScheme="auto"

@@ -51,7 +51,7 @@ export const ForumTable = ({ categories }: ForumTableProps) => {
                           {forum.name}
                         </Anchor>
                         {forum.description && (
-                          <Text size="xs" c="dimmed">
+                          <Text size="xs" c="dimmed" lineClamp={2}>
                             {forum.description}
                           </Text>
                         )}
